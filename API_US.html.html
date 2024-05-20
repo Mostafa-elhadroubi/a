@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="API_US.css">
+</head>
+<body>
+  <input type="text" id="search" placeholder="Enter a state">
+  <div id="res"></div>
+  <div id="city"></div>
+  <script>
+    const API = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    let cities = [];
+    let state = [];
+    let state_obj = [];
+    const input = document.querySelector('#search');
+    const res = document.querySelector('#res');
+    let city = document.querySelector('#city');
+    fetch(API)
+      .then(data => data.json())
+      // .then(data => console.log(data))
+      .then(data => cities.push(...data))
+      // console.log(cities);
+      function findElements(keyword){
+        res.innerHTML = '';
+        
+        state = [];
+        state_obj = [];
+        cities.forEach(obj => {
+          if(obj.state.toLowerCase().includes(keyword)){
+            if(!state.includes(obj.state)){
+              console.log(obj.state);
+              res.innerHTML += `<span class='item'>${obj.state}</span>`;
+              state.push(obj.state);
+            }
+            state_obj.push(obj);
+          }
+          
+        })
+        city.innerHTML = '';
+        console.log(state_obj);//7
+        let span = document.querySelectorAll('.item');
+        
+        span.forEach(state => {
+        state.addEventListener('click', (ev) => {
+          console.log(ev.target);
+          input.value = state.textContent;
+          res.innerHTML = '';
+          city.innerHTML = '';
+          for(let i = 0; i < state_obj.length; i++){
+            if(ev.target.textContent == state_obj[i].state){
+              city.innerHTML += `<span class='em'>${state_obj[i].city}</span>`;
+
+            }
+          }
+        })
+      })
+      }
+
+      input.addEventListener('keydown', () => {
+        findElements(input.value);
+      })
+      // console.log(span);
+     
+  </script>
+</body>
+</html>
